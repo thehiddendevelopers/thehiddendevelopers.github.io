@@ -1,161 +1,302 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hidden Sanctuary | RESTRICTED</title>
-    <style>
-        :root {
-            --bg-color: #0a0a0a;
-            --text-color: #e0e0e0;
-            --accent-color: #ff3333; /* Red for alert/classified */
-            --dim-color: #555;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hidden Sanctuary | RESTRICTED</title>
+  <style>
+    :root {
+      --bg-color: #0a0a0a;
+      --text-color: #e0e0e0;
+      --accent-color: #ff3333; /* Red for alert/classified */
+      --dim-color: #555;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Courier New', Courier, monospace; /* Monospace for terminal look */
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            overflow: hidden;
-            padding: 20px;
-        }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: "Courier New", Courier, monospace; /* Monospace for terminal look */
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+      padding: 20px;
+      position: relative;
+    }
 
-        /* Scanline effect overlay */
-        body::before {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2;
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
-        }
+    /* Scanline effect overlay */
+    body::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background:
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      z-index: 2;
+      background-size: 100% 2px, 3px 100%;
+      pointer-events: none;
+    }
 
-        .container {
-            position: relative;
-            z-index: 3;
-            max-width: 600px;
-            border: 1px solid var(--dim-color);
-            padding: 40px;
-            background: rgba(20, 20, 20, 0.9);
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-        }
+    .container {
+      position: relative;
+      z-index: 3;
+      width: min(720px, 100%);
+      border: 1px solid var(--dim-color);
+      padding: clamp(18px, 4vw, 40px);
+      background: rgba(20, 20, 20, 0.9);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+    }
 
-        .status-bar {
-            border-bottom: 1px solid var(--dim-color);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            color: var(--dim-color);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
+    .status-bar {
+      border-bottom: 1px solid var(--dim-color);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      font-size: 0.8rem;
+      color: var(--dim-color);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      flex-wrap: wrap;
+    }
 
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-        }
+    /* Connection indicator */
+    .net {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
 
-        .warning {
-            color: var(--accent-color);
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            display: inline-block;
-            border: 1px solid var(--accent-color);
-            padding: 5px 15px;
-            animation: pulse 2s infinite;
-        }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      box-shadow: 0 0 12px rgba(255, 51, 51, 0.8);
+      animation: blink 1.2s step-end infinite;
+      flex: 0 0 auto;
+    }
 
-        p {
-            font-size: 1rem;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            color: #aaa;
-        }
+    h1 {
+      font-size: clamp(1.6rem, 3.6vw, 2.6rem);
+      margin-bottom: 10px;
+      letter-spacing: clamp(2px, 0.6vw, 6px);
+      text-transform: uppercase;
+    }
 
-        .redacted {
-            background-color: var(--text-color);
-            color: var(--text-color);
-            padding: 0 5px;
-            user-select: none; /* Prevents user from highlighting to see text */
-        }
+    .warning {
+      color: var(--accent-color);
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-bottom: 18px;
+      display: inline-block;
+      border: 1px solid var(--accent-color);
+      padding: 6px 16px;
+      animation: pulse 2s infinite;
+    }
 
-        .footer {
-            margin-top: 40px;
-            font-size: 0.7rem;
-            color: var(--dim-color);
-        }
+    /* Boot / audit log */
+    .log {
+      margin: 18px 0 26px;
+      padding: 14px 16px;
+      border: 1px dashed rgba(255, 255, 255, 0.18);
+      color: rgba(255, 255, 255, 0.7);
+      text-align: left;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      background: rgba(0, 0, 0, 0.15);
+    }
 
-        /* Blinking Cursor Animation */
-        .cursor {
-            display: inline-block;
-            width: 10px;
-            height: 1em;
-            background-color: var(--accent-color);
-            animation: blink 1s step-end infinite;
-            vertical-align: middle;
-        }
+    .log .line {
+      display: block;
+      opacity: 0;
+      transform: translateY(4px);
+      animation: lineIn 0.35s ease forwards;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
+    @keyframes lineIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 51, 51, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 51, 51, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 51, 51, 0); }
-        }
-    </style>
+    p {
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      color: #aaa;
+    }
+
+    /* Redacted block (keeps your original behavior) */
+    .redacted {
+      background-color: var(--text-color);
+      color: var(--text-color);
+      padding: 0 5px;
+      user-select: none;
+    }
+
+    /* Clearance key row */
+    .keyrow {
+      margin: 12px 0 22px;
+      display: grid;
+      gap: 8px;
+      text-align: left;
+    }
+
+    .keyrow label {
+      font-size: 0.75rem;
+      color: var(--dim-color);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .keyrow input {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-color);
+      padding: 10px 12px;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .keyrow input:focus {
+      border-color: rgba(255, 51, 51, 0.6);
+      box-shadow: 0 0 0 3px rgba(255, 51, 51, 0.12);
+    }
+
+    .footer {
+      margin-top: 34px;
+      font-size: 0.7rem;
+      color: var(--dim-color);
+    }
+
+    /* Blinking Cursor Animation */
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      height: 1em;
+      background-color: var(--accent-color);
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+      margin-left: 4px;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 51, 51, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(255, 51, 51, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 51, 51, 0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+      body::before { opacity: 0.25; }
+    }
+  </style>
 </head>
+
 <body>
-
-    <div class="container">
-        <div class="status-bar">
-            <span>Protocol: Secure</span>
-            <span>Ref: #HS-9921</span>
-        </div>
-
-        <h1>Hidden Sanctuary</h1>
-        
-        <div class="warning">STATUS: CLASSIFIED / UNDER CONSTRUCTION</div>
-
-        <p>
-            Access to this node is currently restricted. The architecture is undergoing 
-            <span class="redacted">major reconstruction</span> protocols.
-        </p>
-
-        <p>
-            Current clearance level: <strong>UNAUTHORIZED</strong>.<br>
-            All connection attempts are being logged.
-        </p>
-
-        <p>
-            System initialization in progress...<span class="cursor"></span>
-        </p>
-
-        <div class="footer">
-            &copy; 2026 HIDDEN SANCTUARY. NO TRESPASSING.
-        </div>
+  <main class="container" role="main" aria-label="Hidden Sanctuary Restricted Page">
+    <div class="status-bar">
+      <span class="net"><span class="dot" aria-hidden="true"></span>LINK: ACTIVE</span>
+      <span>Protocol: Secure</span>
+      <span>Ref: #HS-9921</span>
+      <span id="hsClock" aria-label="Local time">--:--:--</span>
     </div>
 
+    <h1>Hidden Sanctuary</h1>
+
+    <div class="warning">STATUS: CLASSIFIED / UNDER CONSTRUCTION</div>
+
+    <div class="log" id="hsLog" aria-live="polite"></div>
+
+    <p>
+      Access to this node is currently restricted. The architecture is undergoing
+      <span class="redacted">major reconstruction</span> protocols.
+    </p>
+
+    <p>
+      Current clearance level: <strong>UNAUTHORIZED</strong>.<br />
+      All connection attempts are being logged.
+    </p>
+
+    <div class="keyrow">
+      <label for="hsKey">Clearance Key</label>
+      <input id="hsKey" type="password" placeholder="••••••••••" autocomplete="off" />
+    </div>
+
+    <p>
+      System initialization in progress...<span class="cursor" aria-hidden="true"></span>
+    </p>
+
+    <div class="footer">
+      &copy; 2026 HIDDEN SANCTUARY. NO TRESPASSING.
+    </div>
+  </main>
+
+  <script>
+    // Live clock
+    const clockEl = document.getElementById("hsClock");
+    function tickClock() {
+      const d = new Date();
+      clockEl.textContent = d.toLocaleTimeString([], { hour12: false });
+    }
+    tickClock();
+    setInterval(tickClock, 1000);
+
+    // Boot / audit log cycling
+    const logEl = document.getElementById("hsLog");
+    const lines = [
+      "AUTH: Handshake pending...",
+      "AUDIT: Logging enabled (node HS-9921)",
+      "FIREWALL: Intrusion heuristics loaded",
+      "SANDBOX: Containment barriers online",
+      "SYS: Waiting for clearance token..."
+    ];
+
+    let i = 0;
+    function pushLine() {
+      const s = document.createElement("span");
+      s.className = "line";
+      const t = new Date().toLocaleTimeString([], { hour12: false });
+      s.textContent = `[${t}] ${lines[i % lines.length]}`;
+      logEl.appendChild(s);
+
+      // Keep it tidy
+      while (logEl.children.length > 5) logEl.removeChild(logEl.firstChild);
+
+      i++;
+    }
+
+    // Seed a few lines quickly, then slow
+    pushLine();
+    setTimeout(pushLine, 500);
+    setTimeout(pushLine, 1000);
+    setInterval(pushLine, 2500);
+
+    // Optional: subtle UX — focus the key input on load (comment out if you don't want it)
+    window.addEventListener("load", () => {
+      const key = document.getElementById("hsKey");
+      if (key) key.focus({ preventScroll: true });
+    });
+  </script>
 </body>
+</html>
