@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hidden Sanctuary | RESTRICTED</title>
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --text-color: #e0e0e0;
+            --accent-color: #ff3333; /* Red for alert/classified */
+            --dim-color: #555;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Courier New', Courier, monospace; /* Monospace for terminal look */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        /* Scanline effect overlay */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 3;
+            max-width: 600px;
+            border: 1px solid var(--dim-color);
+            padding: 40px;
+            background: rgba(20, 20, 20, 0.9);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .status-bar {
+            border-bottom: 1px solid var(--dim-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--dim-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+        }
+
+        .warning {
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            display: inline-block;
+            border: 1px solid var(--accent-color);
+            padding: 5px 15px;
+            animation: pulse 2s infinite;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #aaa;
+        }
+
+        .redacted {
+            background-color: var(--text-color);
+            color: var(--text-color);
+            padding: 0 5px;
+            user-select: none; /* Prevents user from highlighting to see text */
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 0.7rem;
+            color: var(--dim-color);
+        }
+
+        /* Blinking Cursor Animation */
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1em;
+            background-color: var(--accent-color);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 51, 51, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 51, 51, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 51, 51, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="status-bar">
+            <span>Protocol: Secure</span>
+            <span>Ref: #HS-9921</span>
+        </div>
+
+        <h1>Hidden Sanctuary</h1>
+        
+        <div class="warning">STATUS: CLASSIFIED / UNDER CONSTRUCTION</div>
+
+        <p>
+            Access to this node is currently restricted. The architecture is undergoing 
+            <span class="redacted">major reconstruction</span> protocols.
+        </p>
+
+        <p>
+            Current clearance level: <strong>UNAUTHORIZED</strong>.<br>
+            All connection attempts are being logged.
+        </p>
+
+        <p>
+            System initialization in progress...<span class="cursor"></span>
+        </p>
+
+        <div class="footer">
+            &copy; 2024 HIDDEN SANCTUARY. NO TRESPASSING.
+        </div>
+    </div>
+
+</body>
+</html>

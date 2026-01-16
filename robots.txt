@@ -1,0 +1,9 @@
+# HIDDEN SANCTUARY RESTRICTED ACCESS
+# PROTOCOL: SILENCE
+# ----------------------------------
+
+User-agent: *
+Disallow: /
+
+# ----------------------------------
+# UNAUTHORIZED CRAWLING PROHIBITED
