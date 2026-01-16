@@ -1,183 +1,310 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 | DATA EXPUNGED</title>
-    <style>
-        :root {
-            --bg-color: #050505;
-            --text-color: #cccccc;
-            --accent-color: #ff3333; /* Alert Red */
-            --glitch-color-1: #00ffff; /* Cyan offset */
-            --glitch-color-2: #ff00ff; /* Magenta offset */
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 | DATA EXPUNGED</title>
+  <style>
+    :root{
+      --bg:#050505;
+      --text:#cccccc;
+      --accent:#ff3333;
+      --gl1:#00ffff;
+      --gl2:#ff00ff;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    *{ box-sizing:border-box; margin:0; padding:0; }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Courier New', Courier, monospace;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            overflow: hidden;
-            padding: 20px;
-        }
+    body{
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Courier New", Courier, monospace;
+      min-height: 100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      overflow:hidden;
+      padding:20px;
+      position:relative;
+    }
 
-        /* Scanline Overlay */
-        body::before {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2;
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
-        }
+    body::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      background-size: 100% 2px, 3px 100%;
+      pointer-events:none;
+      z-index:2;
+    }
 
-        .container {
-            position: relative;
-            z-index: 3;
-            max-width: 600px;
-        }
+    body::after{
+      content:"";
+      position:absolute;
+      inset:-40px;
+      background: radial-gradient(circle at center, rgba(0,0,0,0) 45%, rgba(0,0,0,0.75) 100%);
+      pointer-events:none;
+      z-index:1;
+    }
 
-        /* Glitch Animation for the 404 text */
-        .glitch-wrapper {
-            font-size: 6rem;
-            font-weight: bold;
-            color: var(--text-color);
-            position: relative;
-            margin-bottom: 20px;
-            letter-spacing: 5px;
-        }
+    .container{
+      position:relative;
+      z-index:3;
+      width:min(760px, 100%);
+      padding: clamp(18px, 4vw, 34px);
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(12,12,12,0.80);
+      box-shadow: 0 20px 70px rgba(0,0,0,0.65);
+    }
 
-        .glitch::before,
-        .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
+    .status-bar{
+      border-bottom:1px solid rgba(255,255,255,0.12);
+      padding-bottom:10px;
+      margin-bottom:18px;
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      font-size:0.8rem;
+      color: rgba(255,255,255,0.35);
+      text-transform:uppercase;
+      letter-spacing:2px;
+    }
 
-        .glitch::before {
-            left: 2px;
-            text-shadow: -1px 0 var(--glitch-color-1);
-            clip: rect(24px, 550px, 90px, 0);
-            animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
-        }
+    .net{ display:flex; align-items:center; gap:8px; white-space:nowrap; }
+    .dot{
+      width:8px; height:8px; border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(255,51,51,0.85);
+      animation: blink 1.2s step-end infinite;
+      flex: 0 0 auto;
+    }
 
-        .glitch::after {
-            left: -2px;
-            text-shadow: -1px 0 var(--glitch-color-2);
-            clip: rect(85px, 550px, 140px, 0);
-            animation: glitch-anim-2 3s infinite linear alternate-reverse;
-        }
+    .glitch-wrapper{ margin: 6px 0 16px; }
 
-        h2 {
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: var(--accent-color);
-            border-top: 1px solid var(--accent-color);
-            border-bottom: 1px solid var(--accent-color);
-            padding: 10px 0;
-            display: inline-block;
-        }
+    .glitch{
+      font-size: clamp(3.2rem, 10vw, 6.5rem);
+      font-weight: 800;
+      letter-spacing: clamp(2px, 0.7vw, 8px);
+      position: relative;
+      display: inline-block;
+      line-height: 1;
+      text-shadow: 0 0 18px rgba(255,255,255,0.06);
+    }
 
-        p {
-            margin-bottom: 30px;
-            line-height: 1.5;
-            color: #888;
-        }
+    .glitch::before,
+    .glitch::after{
+      content: attr(data-text);
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+    }
 
-        .code-block {
-            font-size: 0.8rem;
-            color: #555;
-            margin-bottom: 30px;
-            text-align: left;
-            border-left: 2px solid var(--accent-color);
-            padding-left: 15px;
-            margin-left: auto;
-            margin-right: auto;
-            width: fit-content;
-        }
+    .glitch::before{
+      transform: translateX(2px);
+      text-shadow: -2px 0 var(--gl1);
+      clip-path: inset(10% 0 65% 0);
+      animation: glitch-1 2.6s infinite linear alternate-reverse;
+      opacity: 0.9;
+    }
 
-        .btn {
-            text-decoration: none;
-            color: var(--bg-color);
-            background-color: var(--text-color);
-            padding: 15px 30px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: all 0.3s ease;
-            display: inline-block;
-        }
+    .glitch::after{
+      transform: translateX(-2px);
+      text-shadow: 2px 0 var(--gl2);
+      clip-path: inset(55% 0 15% 0);
+      animation: glitch-2 3.1s infinite linear alternate-reverse;
+      opacity: 0.9;
+    }
 
-        .btn:hover {
-            background-color: var(--accent-color);
-            color: white;
-            box-shadow: 0 0 15px var(--accent-color);
-        }
+    h2{
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-size: clamp(1.05rem, 2.6vw, 1.5rem);
+      margin: 10px 0 16px;
+      color: var(--accent);
+      border-top: 1px solid rgba(255,51,51,0.65);
+      border-bottom: 1px solid rgba(255,51,51,0.65);
+      padding: 10px 0;
+      display: inline-block;
+    }
 
-        /* Glitch Keyframes */
-        @keyframes glitch-anim-1 {
-            0% { clip: rect(20px, 9999px, 80px, 0); }
-            20% { clip: rect(60px, 9999px, 10px, 0); }
-            40% { clip: rect(90px, 9999px, 100px, 0); }
-            60% { clip: rect(10px, 9999px, 50px, 0); }
-            80% { clip: rect(50px, 9999px, 20px, 0); }
-            100% { clip: rect(70px, 9999px, 90px, 0); }
-        }
+    p{
+      margin: 0 0 18px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.55);
+      font-size: 1rem;
+    }
 
-        @keyframes glitch-anim-2 {
-            0% { clip: rect(90px, 9999px, 10px, 0); }
-            20% { clip: rect(10px, 9999px, 80px, 0); }
-            40% { clip: rect(50px, 9999px, 20px, 0); }
-            60% { clip: rect(70px, 9999px, 90px, 0); }
-            80% { clip: rect(20px, 9999px, 60px, 0); }
-            100% { clip: rect(80px, 9999px, 40px, 0); }
-        }
-    </style>
+    .code-block{
+      margin: 18px auto 26px;
+      text-align:left;
+      border: 1px dashed rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.25);
+      padding: 14px 16px;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.55);
+      user-select: none;
+    }
+
+    .line{
+      display:block;
+      opacity: 0;
+      transform: translateY(4px);
+      animation: lineIn .35s ease forwards;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+
+    @keyframes lineIn{ to { opacity:1; transform: translateY(0); } }
+
+    .actions{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top: 6px;
+    }
+
+    .btn{
+      text-decoration:none;
+      padding: 12px 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      display:inline-block;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.10);
+      color: var(--text);
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+    }
+
+    .btn:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,51,51,0.55);
+      box-shadow: 0 0 18px rgba(255,51,51,0.25);
+      background: rgba(255,51,51,0.14);
+    }
+
+    .btn.primary{
+      border-color: rgba(255,51,51,0.55);
+      background: rgba(255,51,51,0.18);
+      color: #fff;
+    }
+
+    .btn.primary:hover{
+      box-shadow: 0 0 22px rgba(255,51,51,0.35);
+      background: rgba(255,51,51,0.28);
+    }
+
+    .cursor{
+      display:inline-block;
+      width:10px;
+      height:1em;
+      background: var(--accent);
+      vertical-align: middle;
+      margin-left: 6px;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink{ 50%{ opacity:0; } }
+
+    @keyframes glitch-1{
+      0%   { clip-path: inset(12% 0 66% 0); }
+      15%  { clip-path: inset(62% 0 8% 0); }
+      30%  { clip-path: inset(22% 0 58% 0); }
+      45%  { clip-path: inset(70% 0 12% 0); }
+      60%  { clip-path: inset(8% 0 78% 0); }
+      75%  { clip-path: inset(45% 0 30% 0); }
+      100% { clip-path: inset(18% 0 60% 0); }
+    }
+
+    @keyframes glitch-2{
+      0%   { clip-path: inset(58% 0 18% 0); }
+      15%  { clip-path: inset(10% 0 70% 0); }
+      30%  { clip-path: inset(44% 0 38% 0); }
+      45%  { clip-path: inset(28% 0 55% 0); }
+      60%  { clip-path: inset(76% 0 10% 0); }
+      75%  { clip-path: inset(34% 0 48% 0); }
+      100% { clip-path: inset(62% 0 16% 0); }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
+      body::before{ opacity:0.25; }
+    }
+  </style>
 </head>
+
 <body>
-
-    <div class="container">
-        <div class="glitch-wrapper">
-            <div class="glitch" data-text="404">404</div>
-        </div>
-
-        <h2>Asset Expunged</h2>
-
-        <p>
-            The sector you are attempting to access does not exist <br>
-            or has been redacted by administrative order.
-        </p>
-
-        <div class="code-block">
-            > ERR_CODE: INVALID_VECTOR<br>
-            > TRACE: INITIATED<br>
-            > IP: LOGGED
-        </div>
-
-        <a href="index.html" class="btn">Abort & Return</a>
+  <main class="container" role="main" aria-label="404 Data Expunged">
+    <div class="status-bar">
+      <span class="net"><span class="dot" aria-hidden="true"></span>LINK: ACTIVE</span>
+      <span>NODE: HS-EDGE</span>
+      <span>ERR: 404</span>
+      <span id="hsClock" aria-label="Local time">--:--:--</span>
     </div>
 
+    <div class="glitch-wrapper">
+      <div class="glitch" data-text="404" aria-label="404">404</div>
+    </div>
+
+    <h2>Asset Expunged</h2>
+
+    <p>
+      The sector you are attempting to access does not exist<br />
+      or has been redacted by administrative order.
+    </p>
+
+    <div class="code-block" id="hsLog" aria-live="polite"></div>
+
+    <div class="actions">
+      <a href="index.html" class="btn primary">Abort &amp; Return</a>
+      <a href="javascript:history.back()" class="btn">Return to Last Node</a>
+    </div>
+
+    <p style="margin-top:18px; color: rgba(255,255,255,0.35); font-size:0.9rem;">
+      System note: all vectors are monitored<span class="cursor" aria-hidden="true"></span>
+    </p>
+  </main>
+
+  <script>
+    // Live clock
+    const clockEl = document.getElementById("hsClock");
+    function tickClock() {
+      const d = new Date();
+      clockEl.textContent = d.toLocaleTimeString([], { hour12: false });
+    }
+    tickClock();
+    setInterval(tickClock, 1000);
+
+    // Log: type a few lines, then STOP (not permanently rolling)
+    const logEl = document.getElementById("hsLog");
+    const lines = [
+      "> ERR_CODE: INVALID_VECTOR",
+      "> TRACE: INITIATED",
+      "> PACKET: QUARANTINED",
+      "> ORIGIN: REDACTED",
+      "> IP: LOGGED"
+    ];
+
+    let i = 0;
+    const maxLines = 5;
+    const intervalMs = 650;
+
+    const timer = setInterval(() => {
+      const s = document.createElement("span");
+      s.className = "line";
+      const t = new Date().toLocaleTimeString([], { hour12: false });
+      s.textContent = `[${t}] ${lines[i % lines.length]}`;
+      logEl.appendChild(s);
+
+      i++;
+      if (i >= maxLines) clearInterval(timer); // stop after maxLines
+    }, intervalMs);
+  </script>
 </body>
 </html>
