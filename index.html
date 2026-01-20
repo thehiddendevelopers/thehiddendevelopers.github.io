@@ -105,6 +105,7 @@
       line-height: 1.5;
       background: rgba(0, 0, 0, 0.15);
       user-select: none;
+      min-height: 100px; /* Preserve space for logs */
     }
 
     .log .line {
@@ -161,7 +162,29 @@
       box-shadow: 0 0 0 3px rgba(255, 51, 51, 0.12);
     }
 
-    .footer { margin-top: 34px; font-size: 0.7rem; color: var(--dim-color); }
+    /* --- TIMER STYLES --- */
+    .timer-section {
+      margin-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 15px;
+    }
+    
+    .timer-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--dim-color);
+      margin-bottom: 5px;
+    }
+
+    .timer-display {
+      font-size: clamp(1.2rem, 3vw, 1.5rem);
+      font-family: "Courier New", Courier, monospace;
+      /* tabular-nums ensures digits are same width so text doesn't jitter */
+      font-variant-numeric: tabular-nums; 
+      color: var(--text-color);
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+    }
 
     .cursor {
       display: inline-block;
@@ -172,6 +195,8 @@
       vertical-align: middle;
       margin-left: 4px;
     }
+
+    .footer { margin-top: 34px; font-size: 0.7rem; color: var(--dim-color); }
 
     @keyframes blink { 50% { opacity: 0; } }
 
@@ -208,19 +233,17 @@
       <span class="redacted">major construction</span> protocols.
     </p>
 
-    <p>
-      Current clearance level: <strong>UNAUTHORIZED</strong>.<br />
-      All connection attempts are being logged.
-    </p>
-
     <div class="keyrow">
       <label for="hsKey">Clearance Key</label>
       <input id="hsKey" type="password" placeholder="••••••••••" autocomplete="off" />
     </div>
 
-    <p>
-      System initialization in progress...<span class="cursor" aria-hidden="true"></span>
-    </p>
+    <div class="timer-section">
+      <div class="timer-label">INITIALIZATION SEQUENCE T-MINUS</div>
+      <div id="initTimer" class="timer-display">
+        000:00:00:00.0000000<span class="cursor" aria-hidden="true"></span>
+      </div>
+    </div>
 
     <div class="footer">
       &copy; 2026 HIDDEN SANCTUARY. NO TRESPASSING.
@@ -228,7 +251,7 @@
   </main>
 
   <script>
-    // Live clock
+    // 1. Live clock (Local Time)
     const clockEl = document.getElementById("hsClock");
     function tickClock() {
       const d = new Date();
@@ -237,7 +260,7 @@
     tickClock();
     setInterval(tickClock, 1000);
 
-    // Boot / audit log: type in a few lines, then STOP (not permanently rolling)
+    // 2. Boot / audit log
     const logEl = document.getElementById("hsLog");
     const lines = [
       "AUTH: Handshake pending...",
@@ -246,22 +269,68 @@
       "SANDBOX: Containment barriers online",
       "SYS: Waiting for clearance token..."
     ];
-
     let i = 0;
-    const maxLines = 5;          // how many lines to show total
-    const intervalMs = 650;      // typing pace
+    const maxLines = 5;
+    const intervalMs = 650;
     const timer = setInterval(() => {
       const s = document.createElement("span");
       s.className = "line";
       const t = new Date().toLocaleTimeString([], { hour12: false });
       s.textContent = `[${t}] ${lines[i % lines.length]}`;
       logEl.appendChild(s);
+      
+      // Auto-scroll log to bottom
+      logEl.scrollTop = logEl.scrollHeight;
 
       i++;
-      if (i >= maxLines) clearInterval(timer); // stop after maxLines
+      if (i >= maxLines) clearInterval(timer);
     }, intervalMs);
 
-    // Optional: focus the key input on load (comment out if you don't want it)
+    // 3. Countdown Timer (Target: 2027 MST)
+    const timerEl = document.getElementById("initTimer");
+    
+    // Target: Jan 1, 2027 00:00:00 MST (UTC -7)
+    // ISO 8601 format with offset
+    const targetDate = new Date("2027-01-01T00:00:00-07:00").getTime();
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance < 0) {
+        // If passed, stay at zero
+        timerEl.innerHTML = "000:00:00:00.0000000<span class='cursor'></span>";
+        return;
+      }
+
+      // Time calculations
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      const milliseconds = distance % 1000;
+
+      // Pad numbers
+      const d = String(days).padStart(3, '0');
+      const h = String(hours).padStart(2, '0');
+      const m = String(minutes).padStart(2, '0');
+      const s = String(seconds).padStart(2, '0');
+      const ms = String(milliseconds).padStart(3, '0');
+      
+      // Simulating microseconds (0-9999) for the .0000000 effect
+      // Since browser JS doesn't have true microsecond precision on Date objects,
+      // we generate deterministic noise based on the current millisecond to mimic high-speed counting.
+      const micros = String(Math.floor(Math.random() * 9999)).padStart(4, '0');
+
+      timerEl.innerHTML = `${d}:${h}:${m}:${s}.${ms}${micros}<span class="cursor"></span>`;
+      
+      requestAnimationFrame(updateCountdown);
+    }
+    
+    // Start the countdown loop
+    requestAnimationFrame(updateCountdown);
+
+    // Focus input on load
     window.addEventListener("load", () => {
       const key = document.getElementById("hsKey");
       if (key) key.focus({ preventScroll: true });
