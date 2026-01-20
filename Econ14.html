@@ -19,144 +19,176 @@
       background-color: var(--bg-dark);
       color: #eee;
       font-family: 'Courier New', Courier, monospace;
-      height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 400px;
-      padding: 20px;
-      gap: 20px;
-      overflow: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      gap: 10px;
+      overflow-x: hidden;
     }
 
-    /* Glitch Effect Overlay */
+    /* CRT Scanline Effect */
     body::after {
       content: "";
-      position: absolute;
+      position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1), rgba(0,0,0,0.1) 1px, transparent 1px, transparent 2px);
+      background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15), rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
       pointer-events: none;
       z-index: 100;
     }
 
     /* --- TOP BAR --- */
     .header {
-      grid-column: 1 / span 2;
       border: 1px solid #333;
-      padding: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #000;
-    }
-
-    .header h1 { font-size: 1.2rem; letter-spacing: 4px; color: var(--terminal-cyan); }
-    .header .warning { color: var(--terminal-red); font-weight: bold; animation: pulse 1s infinite; }
-
-    /* --- LEFT PANEL: THE LOGS --- */
-    .log-panel {
-      border: 1px solid #333;
-      background: #050505;
-      padding: 20px;
-      overflow-y: hidden;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      position: relative;
+      align-items: center;
+      background: #000;
+      text-align: center;
+      gap: 5px;
     }
 
-    .log-content {
-      font-size: 0.85rem;
-      line-height: 1.6;
-      color: var(--text-dim);
+    .header h1 { 
+      font-size: 0.9rem; 
+      letter-spacing: 2px; 
+      color: var(--terminal-cyan); 
+      margin: 0;
+    }
+    
+    .header .warning { 
+      font-size: 0.75rem; 
+      color: var(--terminal-red); 
+      font-weight: bold; 
+      animation: pulse 1s infinite; 
     }
 
-    .log-entry { margin-bottom: 10px; opacity: 0; transform: translateX(-10px); animation: slideIn 0.3s forwards; }
-    .log-entry.red { color: var(--terminal-red); }
-    .log-entry.cyan { color: var(--terminal-cyan); }
-
-    /* --- RIGHT PANEL: VISUALIZER --- */
-    .sidebar { display: flex; flex-direction: column; gap: 20px; }
-
+    /* --- VISUALIZER --- */
     .visualizer-box {
       border: 1px solid #333;
       background: #000;
-      height: 250px;
+      height: 180px;
       position: relative;
       overflow: hidden;
+      flex-shrink: 0;
     }
 
     canvas { width: 100%; height: 100%; }
 
+    /* --- ECHO COUNTER --- */
     .echo-counter {
       border: 1px solid #333;
       background: var(--panel-bg);
-      padding: 30px;
+      padding: 15px;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .echo-count {
-      font-size: 2.5rem;
+      font-size: 2rem;
       color: var(--terminal-cyan);
-      text-shadow: 0 0 15px var(--terminal-cyan);
-      margin: 10px 0;
+      text-shadow: 0 0 10px var(--terminal-cyan);
+      margin: 5px 0;
     }
 
-    /* --- KEYFRAMES --- */
-    @keyframes pulse { 50% { opacity: 0.3; } }
-    @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
-    @keyframes flicker {
-      0% { opacity: 0.8; }
-      5% { opacity: 0.2; }
-      10% { opacity: 0.8; }
-      100% { opacity: 1; }
+    /* --- LOG PANEL --- */
+    .log-panel {
+      border: 1px solid #333;
+      background: #050505;
+      padding: 15px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 250px;
+      max-height: 40vh; /* Prevents logs from pushing everything off screen */
     }
 
+    .log-content {
+      font-size: 0.75rem;
+      line-height: 1.4;
+      color: var(--text-dim);
+      overflow-y: auto;
+    }
+
+    .log-entry { 
+      margin-bottom: 8px; 
+      opacity: 0; 
+      transform: translateX(-5px); 
+      animation: slideIn 0.3s forwards; 
+      word-break: break-word;
+    }
+    
+    .log-entry.red { color: var(--terminal-red); }
+    .log-entry.cyan { color: var(--terminal-cyan); }
+
+    /* --- FOOTER --- */
     .status-footer {
       background: var(--terminal-red);
       color: #000;
-      padding: 5px;
+      padding: 8px;
       font-weight: bold;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       text-align: center;
+      text-transform: uppercase;
       margin-top: auto;
     }
 
-    h2 { font-size: 0.8rem; color: #555; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+    h2 { 
+      font-size: 0.7rem; 
+      color: #555; 
+      text-transform: uppercase; 
+      margin-bottom: 8px; 
+      display: flex; 
+      align-items: center; 
+      gap: 5px; 
+    }
+    
     h2::before { content: ">>"; color: var(--terminal-cyan); }
 
+    /* --- ANIMATIONS --- */
+    @keyframes pulse { 50% { opacity: 0.3; } }
+    @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      5% { opacity: 0.2; }
+      10% { opacity: 0.8; }
+    }
+
+    /* Custom scrollbar for logs */
+    .log-content::-webkit-scrollbar { width: 4px; }
+    .log-content::-webkit-scrollbar-track { background: #000; }
+    .log-content::-webkit-scrollbar-thumb { background: #333; }
   </style>
 </head>
 <body>
 
   <header class="header">
-    <div style="display:flex; align-items:center; gap:15px;">
-      <div style="width: 20px; height: 20px; background: var(--terminal-red); border-radius: 50%;"></div>
-      <h1>CODENAME: HIDDEN-SANCTUARY</h1>
-    </div>
-    <div class="warning">!! CLASSIFIED: PROJECT CHORUS !!</div>
+    <h1>HS // PROJECT CHORUS</h1>
+    <div class="warning">!! CLASSIFIED: LEVEL 5 CLEARANCE !!</div>
   </header>
 
+  <section class="visualizer-box">
+    <h2>NEURAL WAVE</h2>
+    <canvas id="scope"></canvas>
+  </section>
+
+  <section class="echo-counter">
+    <h2>ECHO COUNT</h2>
+    <div class="echo-count" id="echoCount">0</div>
+  </section>
+
   <main class="log-panel">
-    <h2>LOG PANEL</h2>
+    <h2>SYSTEM LOGS</h2>
     <div class="log-content" id="logContent">
-      <div class="log-entry">>> CONNECTED TO CHORUS AUDIT...</div>
-      <div class="log-entry">>> RESONANCE FREQUENCY: STABLE</div>
+      <div class="log-entry">>> AUTHENTICATING HANDSHAKE...</div>
+      <div class="log-entry cyan">>> CHORUS MODULE: INITIALIZED</div>
     </div>
   </main>
 
-  <div class="sidebar">
-    <div class="visualizer-box">
-      <h2>NEURAL CHORUS VISUALIZER</h2>
-      <canvas id="scope"></canvas>
-    </div>
-
-    <div class="echo-counter">
-      <h2>ECHO COUNT</h2>
-      <div class="echo-count" id="echoCount">0</div>
-      <div style="color: #444; font-size: 0.7rem;">THRESHOLD: 300 UNITS</div>
-    </div>
-
-    <div class="status-footer">
-      ACCESS UNAUTHORIZED. CURRENT LOCATION LOGGED.
-    </div>
+  <div class="status-footer">
+    DEVICE LOGGED. DO NOT ATTEMPT TO DISCONNECT.
   </div>
 
   <script>
@@ -167,61 +199,65 @@
 
     let echos = 0;
     
-    // Scarier Lore Logs
     const lore = [
       "INIT: CHORUS-14 PROTOCOL ACTIVE.",
-      "WARNING: INTERWEAVE DENSITY EXCEEDS SAFETY LIMITS.",
-      "SUBJECT 882 IS SCREAMING IN THE DATASTREAM.",
-      "FRAGMENTATION DETECTED IN SECTOR F80.",
-      "THEY ARE NOT DEPARTING. THEY ARE REPEATING.",
-      "ECHO DETECTED: 'Please let us out.'",
+      "WARNING: INTERWEAVE DENSITY CRITICAL.",
+      "SUBJECT 882 IS SCREAMING.",
+      "THEY ARE NOT DEPARTING. THEY REPEAT.",
+      "ECHO: 'Please let us out.'",
       "STABILITY INDEX: DEGRADED.",
       "NEURAL CHORUS SYNC AT 88.4%",
-      "ERROR: AUDIO FEED CONTAINS NON-HUMAN FREQUENCIES.",
-      "THE BORDER IS THINNING. THE SANCTUARY IS FULL.",
-      "PURGE DELAYED: RESISTANCE ENCOUNTERED.",
-      "THEY ARE SINGING TOGETHER NOW."
+      "ERROR: AUDIO CONTAINS VOICES.",
+      "THE BORDER IS THINNING.",
+      "THEY ARE SINGING TOGETHER NOW.",
+      "PURGE FAILED: SECTOR REMAINS.",
+      "GHOST DATA DETECTED IN BUFFER."
     ];
 
     function addLog() {
       const entry = document.createElement('div');
       entry.className = 'log-entry';
-      if (Math.random() > 0.7) entry.classList.add('red');
-      if (Math.random() > 0.9) entry.classList.add('cyan');
+      if (Math.random() > 0.8) entry.classList.add('red');
+      if (Math.random() > 0.92) entry.classList.add('cyan');
       
       entry.innerText = `>> ${lore[Math.floor(Math.random() * lore.length)]}`;
       logContent.appendChild(entry);
       
-      if (logContent.children.length > 18) {
+      // Auto-scroll to latest log
+      logContent.scrollTop = logContent.scrollHeight;
+      
+      if (logContent.children.length > 30) {
         logContent.removeChild(logContent.firstChild);
       }
       
-      // Update Echo count
       echos += Math.floor(Math.random() * 3);
       echoEl.innerText = echos;
 
-      setTimeout(addLog, Math.random() * 2000 + 500);
+      setTimeout(addLog, Math.random() * 2500 + 800);
     }
 
     // Oscilloscope Animation
-    canvas.width = 400;
-    canvas.height = 150;
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.offsetWidth;
+      canvas.height = canvas.parentElement.offsetHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
     function draw() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.strokeStyle = Math.random() > 0.95 ? '#ff3333' : '#00f2ff';
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = Math.random() > 0.98 ? '#ff3333' : '#00f2ff';
+      ctx.lineWidth = 1.5;
       ctx.beginPath();
 
-      const sliceWidth = canvas.width / 50;
+      const sliceWidth = canvas.width / 40;
       let x = 0;
 
-      for (let i = 0; i < 50; i++) {
-        // Create jagged, spooky waves
-        const v = (Math.random() * 40) + 55;
-        const y = (v * Math.sin(i * 0.5 + Date.now() * 0.01)) + (canvas.height / 2);
+      for (let i = 0; i < 40; i++) {
+        const v = (Math.random() * 30) + 20;
+        const y = (v * Math.sin(i * 0.4 + Date.now() * 0.008)) + (canvas.height / 2);
 
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
@@ -236,11 +272,13 @@
     addLog();
     draw();
 
-    // Sudden Glitch Effect
+    // Glitch effect
     setInterval(() => {
-      document.body.style.animation = "flicker 0.1s infinite";
-      setTimeout(() => { document.body.style.animation = ""; }, 200);
-    }, 4000);
+      if(Math.random() > 0.7) {
+        document.body.style.animation = "flicker 0.15s";
+        setTimeout(() => { document.body.style.animation = ""; }, 150);
+      }
+    }, 5000);
 
   </script>
 </body>
